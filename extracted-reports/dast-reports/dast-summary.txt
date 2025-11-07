@@ -1,0 +1,25 @@
+=====================================
+OWASP ZAP DAST Scan Report
+=====================================
+
+Timestamp: Thu Nov  6 19:34:06 UTC 2025
+Target: http://localhost:4000
+Scanner: OWASP ZAP Baseline
+
+📊 Vulnerability Statistics:
+├── 🔴 High Risk: 1
+├── 🟠 Medium Risk: 5
+├── 🟡 Low Risk: 12
+├── 🔵 Informational: 17
+└── 📋 Total Alerts: 35
+
+📈 Risk Distribution:
+├── High: 2.9%
+├── Medium: 14.3%
+├── Low: 34.3%
+└── Info: 48.6%
+
+🔝 Top Vulnerabilities Found:
+
+📄 Full HTML report available in artifacts.
+=====================================

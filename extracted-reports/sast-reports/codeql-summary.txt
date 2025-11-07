@@ -1,0 +1,27 @@
+=====================================
+CodeQL SAST Analysis Report
+=====================================
+
+Timestamp: Thu Nov  6 19:33:25 UTC 2025
+Language: JavaScript
+Queries: security-extended, security-and-quality
+
+🔴 Critical/Error: 0
+🟡 Warning: 0
+🔵 Note/Info: 0
+📋 Total Issues: 46
+
+Top 10 vulnerabilities:
+• [null] js/missing-rate-limiting: This route handler performs [authorization](1), but is not rate-limited.
+• [null] js/server-side-unvalidated-url-redirection: Untrusted URL redirection depends on a [user-provided value](1).
+• [null] js/xss-through-dom: [DOM text](1) is reinterpreted as HTML without escaping meta-characters.
+• [null] js/xss-through-dom: [DOM text](1) is reinterpreted as HTML without escaping meta-characters.
+• [null] js/xss-through-dom: [DOM text](1) is reinterpreted as HTML without escaping meta-characters.
+• [null] js/xss-through-dom: [DOM text](1) is reinterpreted as HTML without escaping meta-characters.
+• [null] js/xss-through-dom: [DOM text](1) is reinterpreted as HTML without escaping meta-characters.
+• [null] js/xss-through-dom: [DOM text](1) is reinterpreted as HTML without escaping meta-characters.
+• [null] js/xss-through-dom: [DOM text](1) is reinterpreted as HTML without escaping meta-characters.
+• [null] js/xss-through-dom: [DOM text](1) is reinterpreted as HTML without escaping meta-characters.
+
+Full HTML report available in: sast-html/codeql-report.html
+=====================================

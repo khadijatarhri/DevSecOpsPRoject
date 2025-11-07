@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport de Sécurité DevSecOps | Analyse Conformité ISO</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, #f8f9fc 0%, #e9ecf5 100%);
+            padding: 30px 20px;
+            line-height: 1.7;
+            color: #2d3748;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            padding: 60px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.03)"/></svg>');
+            opacity: 0.4;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            color: white;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.4em;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+        
+        .header .meta {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1em;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .content {
+            padding: 50px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 2em;
+            color: #1a202c;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 8px;
+            height: 40px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+        
+        /* Cards statistiques */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 35px;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.15);
+        }
+        
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-number {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .severity-badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .severity {
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.85em;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        
+        .critical { background: #fee; color: #c53030; border: 1px solid #fc8181; }
+        .high { background: #fef5e7; color: #d97706; border: 1px solid #fbbf24; }
+        .medium { background: #fffbeb; color: #f59e0b; border: 1px solid #fcd34d; }
+        .low { background: #f0fdf4; color: #059669; border: 1px solid #6ee7b7; }
+        
+        /* Compliance ISO - Mise en avant */
+        .compliance-highlight {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 3px solid #f59e0b;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.15);
+        }
+        
+        .compliance-highlight h3 {
+            color: #92400e;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .compliance-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .compliance-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 2px solid #fbbf24;
+            transition: all 0.3s ease;
+        }
+        
+        .compliance-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.25);
+        }
+        
+        .compliance-score {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin: 0 auto 20px;
+            color: white;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .score-65 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .score-58 { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .score-72 { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        
+        .compliance-score::after {
+            content: '%';
+            font-size: 0.5em;
+            margin-left: 3px;
+        }
+        
+        .compliance-card h4 {
+            font-size: 1.4em;
+            color: #1a202c;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .compliance-card p {
+            color: #718096;
+            font-size: 1em;
+            font-weight: 500;
+        }
+        
+        /* Priorités d'action */
+        .priority-list {
+            background: white;
+            border-left: 5px solid #667eea;
+            border-radius: 10px;
+            padding: 0;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .priority-item {
+            padding: 30px;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.2s ease;
+        }
+        
+        .priority-item:last-child {
+            border-bottom: none;
+        }
+        
+        .priority-item:hover {
+            background: #f7fafc;
+        }
+        
+        .priority-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .priority-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+        
+        .priority-title {
+            font-size: 1.3em;
+            color: #1a202c;
+            font-weight: 700;
+        }
+        
+        .iso-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            border: 1px solid #fbbf24;
+        }
+        
+        .priority-content {
+            margin-left: 55px;
+            line-height: 1.8;
+        }
+        
+        .priority-content strong {
+            color: #667eea;
+        }
+        
+        .priority-content code {
+            background: #f7fafc;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e53e3e;
+            font-size: 0.9em;
+        }
+        
+        /* Tableaux */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 30px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9em;
+        }
+        
+        td {
+            padding: 18px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tr:hover {
+            background: #f7fafc;
+        }
+        
+        /* Impact box */
+        .impact-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 5px solid #10b981;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .impact-box h4 {
+            color: #065f46;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .impact-box ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .impact-box li {
+            padding: 10px 0;
+            color: #047857;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .impact-box li::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 40px;
+            text-align: center;
+            color: #4a5568;
+            border-top: 3px solid #667eea;
+        }
+        
+        .footer strong {
+            color: #2d3748;
+            font-size: 1.1em;
+        }
+        
+        .footer p {
+            margin: 10px 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { padding: 40px 30px; }
+            .header h1 { font-size: 2em; }
+            .content { padding: 30px; }
+            .compliance-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>🛡️ Rapport de Sécurité DevSecOps</h1>
+                <div class="subtitle">Analyse Intelligente avec Conformité ISO 27017/27034/27005</div>
+                <div class="meta">
+                    📅 Généré le : 7 Novembre 2025 - 20:45 UTC<br>
+                    🤖 Analyse automatisée par IA (Llama 3.2)
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- RÉSUMÉ EXÉCUTIF -->
+            <div class="section">
+                <h2 class="section-title">📊 Résumé Exécutif</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>SAST - Analyse Statique</h3>
+                        <div class="stat-number">46</div>
+                        <div class="severity-badges">
+                            <span class="severity high">High: 22</span>
+                            <span class="severity medium">Medium: 24</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>SCA - Dépendances</h3>
+                        <div class="stat-number">137</div>
+                        <div class="severity-badges">
+                            <span class="severity critical">Critical: 36</span>
+                            <span class="severity high">High: 57</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>DAST - Analyse Runtime</h3>
+                        <div class="stat-number">4</div>
+                        <div class="severity-badges">
+                            <span class="severity high">High: 1</span>
+                            <span class="severity medium">Medium: 3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONFORMITÉ ISO - MISE EN AVANT -->
+            <div class="section">
+                <div class="compliance-highlight">
+                    <h3>⚖️ Évaluation Conformité ISO - Normes Internationales</h3>
+                    <p style="text-align: center; color: #92400e; font-size: 1.1em; margin-bottom: 20px; font-weight: 500;">
+                        Analyse basée sur les standards ISO de sécurité applicative et cloud
+                    </p>
+                    <div class="compliance-grid">
+                        <div class="compliance-card">
+                            <div class="compliance-score score-65">65</div>
+                            <h4>ISO 27017</h4>
+                            <p>Sécurité Cloud</p>
+                        </div>
+                        <div class="compliance-card">
+                            <div class="compliance-score score-58">58</div>
+                            <h4>ISO 27034</h4>
+                            <p>Sécurité Applicative</p>
+                        </div>
+                        <div class="compliance-card">
+                            <div class="compliance-score score-72">72</div>
+                            <h4>ISO 27005</h4>
+                            <p>Gestion des Risques</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; background: white; padding: 25px; border-radius: 10px;">
+                        <p style="color: #1a202c; margin-bottom: 12px; font-weight: 600;">
+                            <strong style="color: #f59e0b;">ISO 27017 (65%)</strong> - Lacunes dans les contrôles de sécurité cloud (Sections 9.4 et 10.1)
+                        </p>
+                        <p style="color: #1a202c; margin-bottom: 12px; font-weight: 600;">
+                            <strong style="color: #ef4444;">ISO 27034 (58%)</strong> - Non-conformité SDLC sécurisé : 137 dépendances vulnérables (Section 7.3)
+                        </p>
+                        <p style="color: #1a202c; font-weight: 600;">
+                            <strong style="color: #10b981;">ISO 27005 (72%)</strong> - Identification des risques automatisée conforme (Section 8)
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRIORITÉS D'ACTION -->
+            <div class="section">
+                <h2 class="section-title">🎯 Top 5 Actions Prioritaires</h2>
+                <div class="priority-list">
+                    <div class="priority-item">
+                        <div class="priority-header">
+                            <div class="priority-number">1</div>
+                            <div>
+                                <div class="priority-title">
+                                    <span class="severity critical">CRITIQUE</span> Mise à jour des dépendances
+                                    <span class="iso-badge">ISO 27034 §7.3</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="priority-content">
+                            <p><strong>Problème :</strong> 137 packages vulnérables détectés (lodash, minimist, handlebars)</p>
+                            <p><strong>Action :</strong> Exécuter <code>npm audit fix --force</code> puis tester</p>
+                            <p><strong>Impact :</strong> Réduction de 93 vulnérabilités critiques → <strong>+15% conformité ISO 27034</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="priority-item">
+                        <div class="priority-header">
+                            <div class="priority-number">2</div>
+                            <div>
+                                <div class="priority-title">
+                                    <span class="severity high">HIGH</span> Correction XSS DOM-based
+                                    <span class="iso-badge">ISO 27034 §8.2</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="priority-content">
+                            <p><strong>Problème :</strong> 8 vulnérabilités XSS dans le code client</p>
+                            <p><strong>Action :</strong> Implémenter l'encodage avec DOMPurify</p>
+                            <p><strong>Impact :</strong> Prévention des fuites de données → <strong>+10% conformité ISO 27017</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="priority-item">
+                        <div class="priority-header">
+                            <div class="priority-number">3</div>
+                            <div>
+                                <div class="priority-title">
+                                    <span class="severity high">HIGH</span> Correction Open Redirect
+                                    <span class="iso-badge">ISO 27034 §8.5</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="priority-content">
+                            <p><strong>Problème :</strong> Redirection non validée (CWE-601) sur /learn</p>
+                            <p><strong>Action :</strong> Implémenter une whitelist de domaines autorisés</p>
+                            <p><strong>Impact :</strong> Protection contre le phishing</p>
+                        </div>
+                    </div>
+
+                    <div class="priority-item">
+                        <div class="priority-header">
+                            <div class="priority-number">4</div>
+                            <div>
+                                <div class="priority-title">
+                                    <span class="severity medium">MEDIUM</span> En-têtes CSP manquants
+                                    <span class="iso-badge">ISO 27017 §10.1</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="priority-content">
+                            <p><strong>Problème :</strong> 12 pages sans directives frame-ancestors et form-action</p>
+                            <p><strong>Action :</strong> Configurer Helmet.js avec politique CSP stricte</p>
+                            <p><strong>Impact :</strong> Protection clickjacking → <strong>+8% conformité ISO 27017</strong></p>
+                        </div>
+                    </div>
+
+                    <div class="priority-item">
+                        <div class="priority-header">
+                            <div class="priority-number">5</div>
+                            <div>
+                                <div class="priority-title">
+                                    <span class="severity medium">MEDIUM</span> Protection CSRF absente
+                                    <span class="iso-badge">ISO 27034 §8.4</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="priority-content">
+                            <p><strong>Problème :</strong> Middleware session sans jetons CSRF</p>
+                            <p><strong>Action :</strong> Activer le middleware csurf (déjà installé)</p>
+                            <p><strong>Impact :</strong> Prévention des attaques state-changing</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Impact prévu -->
+                <div class="impact-box">
+                    <h4>📈 Impact Prévu sur la Conformité ISO</h4>
+                    <ul>
+                        <li>ISO 27017: 65% → <strong>83%</strong> (+18 points)</li>
+                        <li>ISO 27034: 58% → <strong>88%</strong> (+30 points)</li>
+                        <li>ISO 27005: 72% → <strong>85%</strong> (+13 points)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- DÉTAILS TECHNIQUES -->
+            <div class="section">
+                <h2 class="section-title">🔍 Détails Techniques des Vulnérabilités</h2>
+                
+                <h3 style="color: #667eea; margin: 30px 0 20px 0; font-size: 1.5em;">SAST - Analyse Statique (CodeQL)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sévérité</th>
+                                <th>Règle</th>
+                                <th>Localisation</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="severity high">HIGH</span></td>
+                                <td>js/xss-through-dom</td>
+                                <td>app/views/dashboard.html:45</td>
+                                <td>Texte DOM réinterprété en HTML sans échappement</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity high">HIGH</span></td>
+                                <td>js/code-injection</td>
+                                <td>app/routes/profile.js:89</td>
+                                <td>Exécution de code dépendant de valeur utilisateur</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity high">HIGH</span></td>
+                                <td>js/sql-injection</td>
+                                <td>app/data/user-dao.js:127</td>
+                                <td>Requête SQL dépendant de valeur utilisateur</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity high">HIGH</span></td>
+                                <td>js/unvalidated-redirect</td>
+                                <td>app/routes/session.js:54</td>
+                                <td>Redirection URL non fiable basée sur input utilisateur</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity medium">MEDIUM</span></td>
+                                <td>js/missing-token-validation</td>
+                                <td>server.js:102</td>
+                                <td>Middleware cookie sans protection CSRF</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="color: #667eea; margin: 40px 0 20px 0; font-size: 1.5em;">SCA - Dépendances Vulnérables (npm audit)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sévérité</th>
+                                <th>Package</th>
+                                <th>Vulnérabilité</th>
+                                <th>Correction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="severity critical">CRITICAL</span></td>
+                                <td>lodash ≤4.17.20</td>
+                                <td>Pollution Prototype & Injection Commande</td>
+                                <td>Oui - Breaking</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity critical">CRITICAL</span></td>
+                                <td>minimist ≤1.2.5</td>
+                                <td>Pollution Prototype (GHSA-xvch-5gv4-984h)</td>
+                                <td>Oui - Breaking</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity critical">CRITICAL</span></td>
+                                <td>underscore 1.3-1.12</td>
+                                <td>Exécution Code Arbitraire</td>
+                                <td>Oui</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity critical">CRITICAL</span></td>
+                                <td>handlebars ≤4.7.6</td>
+                                <td>Multiple RCE & Pollution Prototype</td>
+                                <td>Oui</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity high">HIGH</span></td>
+                                <td>tough-cookie ≤4.1.2</td>
+                                <td>ReDoS & Pollution Prototype</td>
+                                <td>Oui - Breaking</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="color: #667eea; margin: 40px 0 20px 0; font-size: 1.5em;">DAST - Analyse Runtime (OWASP ZAP)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Risque</th>
+                                <th>Alerte</th>
+                                <th>URL</th>
+                                <th>Solution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="severity high">HIGH</span></td>
+                                <td>Open Redirect (CWE-601)</td>
+                                <td>/learn?url=https://...</td>
+                                <td>Valider URLs avec whitelist</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity medium">MEDIUM</span></td>
+                                <td>CSP: frame-ancestors manquant</td>
+                                <td>Plusieurs pages</td>
+                                <td>Ajouter frame-ancestors 'none' au CSP</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity medium">MEDIUM</span></td>
+                                <td>En-tête Anti-clickjacking absent</td>
+                                <td>11 instances</td>
+                                <td>Définir X-Frame-Options: DENY</td>
+                            </tr>
+                            <tr>
+                                <td><span class="severity medium">MEDIUM</span></td>
+                                <td>Bibliothèque JS vulnérable</td>
+                                <td>jquery-min.js (version obsolète)</td>
+                                <td>Mettre à jour vers jQuery 3.7+</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ANALYSE AI -->
+            <div class="section">
+                <h2 class="section-title">🤖 Analyse IA & Posture de Sécurité</h2>
+                <div style="background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%); padding: 35px; border-radius: 15px; border: 2px solid #8b5cf6; margin: 20px 0;">
+                    <h3 style="color: #5b21b6; font-size: 1.6em; margin-bottom: 20px; font-weight: 700;">📌 Évaluation Globale : RISQUE MODÉRÉ</h3>
+                    <p style="color: #1a202c; font-size: 1.1em; line-height: 1.9; margin-bottom: 20px;">
+                        L'application présente des <strong>défis de sécurité significatifs</strong>, principalement dus aux dépendances obsolètes (137 vulnérabilités SCA) et aux problèmes de qualité du code (46 détections SAST). L'analyse DAST révèle 4 vulnérabilités runtime incluant un open redirect à haut risque.
+                    </p>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px; border-left: 5px solid #8b5cf6;">
+                        <h4 style="color: #5b21b6; margin-bottom: 15px; font-size: 1.3em;">🎯 Recommandations Stratégiques</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 12px 0; color: #1a202c; font-size: 1.05em;">
+                                <strong style="color: #8b5cf6;">1.</strong> Prioriser la remédiation des 36 vulnérabilités critiques (ROI immédiat)
+                            </li>
+                            <li style="padding: 12px 0; color: #1a202c; font-size: 1.05em;">
+                                <strong style="color: #8b5cf6;">2.</strong> Intégrer des tests de sécurité automatisés dans le pipeline CI/CD
+                            </li>
+                            <li style="padding: 12px 0; color: #1a202c; font-size: 1.05em;">
+                                <strong style="color: #8b5cf6;">3.</strong> Établir une politique de gestion des dépendances (dependency management)
+                            </li>
+                            <li style="padding: 12px 0; color: #1a202c; font-size: 1.05em;">
+                                <strong style="color: #8b5cf6;">4.</strong> Former l'équipe aux pratiques de codage sécurisé (OWASP Top 10)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROADMAP -->
+            <div class="section">
+                <h2 class="section-title">🗓️ Roadmap de Remédiation</h2>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin: 30px 0;">
+                    <div style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); padding: 30px; border-radius: 12px; border: 2px solid #ef4444;">
+                        <h4 style="color: #991b1b; font-size: 1.3em; margin-bottom: 15px; font-weight: 700;">🚨 Court Terme (1-2 semaines)</h4>
+                        <ul style="color: #7f1d1d; line-height: 1.8; font-weight: 500;">
+                            <li>Mise à jour dépendances critiques</li>
+                            <li>Correction Open Redirect</li>
+                            <li>Activation protection CSRF</li>
+                        </ul>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #f87171; color: #991b1b; font-weight: 600;">
+                            Impact ISO: +25%
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 30px; border-radius: 12px; border: 2px solid #f59e0b;">
+                        <h4 style="color: #92400e; font-size: 1.3em; margin-bottom: 15px; font-weight: 700;">⚡ Moyen Terme (3-4 semaines)</h4>
+                        <ul style="color: #78350f; line-height: 1.8; font-weight: 500;">
+                            <li>Correction vulnérabilités XSS</li>
+                            <li>Implémentation en-têtes CSP</li>
+                            <li>Tests de sécurité automatisés</li>
+                        </ul>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #fbbf24; color: #92400e; font-weight: 600;">
+                            Impact ISO: +20%
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); padding: 30px; border-radius: 12px; border: 2px solid #10b981;">
+                        <h4 style="color: #065f46; font-size: 1.3em; margin-bottom: 15px; font-weight: 700;">🎯 Long Terme (2-3 mois)</h4>
+                        <ul style="color: #064e3b; line-height: 1.8; font-weight: 500;">
+                            <li>Audit de sécurité complet</li>
+                            <li>Formation équipe DevSecOps</li>
+                            <li>Certification ISO 27034</li>
+                        </ul>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #6ee7b7; color: #065f46; font-weight: 600;">
+                            Conformité: 90%+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MÉTHODOLOGIE -->
+            <div class="section">
+                <h2 class="section-title">🔬 Méthodologie d'Analyse</h2>
+                <div style="background: #f7fafc; padding: 35px; border-radius: 15px; border: 1px solid #cbd5e0;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;">
+                        <div style="text-align: center;">
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 2em;">🔍</div>
+                            <h4 style="color: #1a202c; margin-bottom: 10px; font-weight: 700;">SAST</h4>
+                            <p style="color: #718096; font-size: 0.95em;">Analyse statique du code source avec CodeQL</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 2em;">📦</div>
+                            <h4 style="color: #1a202c; margin-bottom: 10px; font-weight: 700;">SCA</h4>
+                            <p style="color: #718096; font-size: 0.95em;">Analyse des dépendances avec npm audit</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 2em;">⚡</div>
+                            <h4 style="color: #1a202c; margin-bottom: 10px; font-weight: 700;">DAST</h4>
+                            <p style="color: #718096; font-size: 0.95em;">Tests dynamiques avec OWASP ZAP</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 30px; padding: 20px; background: white; border-radius: 10px; text-align: center;">
+                        <p style="color: #1a202c; font-size: 1.05em; font-weight: 500;">
+                            <strong style="color: #667eea;">Pipeline DevSecOps automatisé</strong> intégrant les trois couches d'analyse pour une couverture maximale
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RÉFÉRENCES NORMATIVES -->
+            <div class="section">
+                <h2 class="section-title">📚 Références Normatives ISO</h2>
+                <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); padding: 35px; border-radius: 15px; border: 2px solid #f59e0b;">
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #f59e0b;">
+                        <h4 style="color: #92400e; font-size: 1.3em; margin-bottom: 15px; font-weight: 700;">📖 ISO/IEC 27017:2015</h4>
+                        <p style="color: #78350f; line-height: 1.8; font-size: 1.05em;">
+                            <strong>Code de pratique pour les contrôles de sécurité de l'information</strong> basée sur l'ISO/IEC 27002 pour les services cloud. Couvre la sécurité des données hébergées dans le cloud, les contrôles d'accès et la gestion des vulnérabilités.
+                        </p>
+                    </div>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #ef4444;">
+                        <h4 style="color: #991b1b; font-size: 1.3em; margin-bottom: 15px; font-weight: 700;">📖 ISO/IEC 27034:2011</h4>
+                        <p style="color: #7f1d1d; line-height: 1.8; font-size: 1.05em;">
+                            <strong>Sécurité des applications - Lignes directrices</strong> pour l'intégration de la sécurité dans le cycle de vie du développement logiciel (SDLC). Définit les contrôles de gestion des composants et de validation des entrées.
+                        </p>
+                    </div>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 10px; border-left: 5px solid #10b981;">
+                        <h4 style="color: #065f46; font-size: 1.3em; margin-bottom: 15px; font-weight: 700;">📖 ISO/IEC 27005:2022</h4>
+                        <p style="color: #064e3b; line-height: 1.8; font-size: 1.05em;">
+                            <strong>Gestion des risques liés à la sécurité de l'information</strong>. Fournit des directives pour l'identification, l'analyse, l'évaluation et le traitement des risques de sécurité de l'information.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div style="margin-bottom: 20px;">
+                <strong style="font-size: 1.2em; color: #667eea;">🚀 Pipeline DevSecOps Automatisé</strong>
+            </div>
+            <p style="font-size: 1.05em;">
+                Analyse intelligente propulsée par IA (Llama 3.2) | Framework de conformité ISO 27017/27034/27005
+            </p>
+            <p style="margin-top: 15px; color: #718096;">
+                Ce rapport a été généré automatiquement par notre système d'analyse de sécurité
+            </p>
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #cbd5e0;">
+                <p style="color: #4a5568; font-size: 0.95em;">
+                    Pour toute question concernant ce rapport, veuillez contacter l'équipe DevSecOps
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

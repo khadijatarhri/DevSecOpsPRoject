@@ -1,0 +1,28 @@
+
+error: 0
+
+warning: 46
+ - js/unused-local-variable Unused variable  ...: 10
+ - js/xss-through-dom [DOM text](1) is reinterpreted as HTML without escaping meta-characters.: 8
+ - js/code-injection This code execution depends on a [user-provided value](1).: 4
+ - js/useless-expression This expression has no effect.: 3
+ - js/sql-injection This query object depends on a [user-provided value](1).: 2
+ - js/polynomial-redos This [regular expression](1) that depends on [a user-provided value](2) may run slow on strings  ...: 2
+ - js/duplicate-html-attribute This attribute [is duplicated later](1).: 2
+ - js/missing-rate-limiting This route handler performs [authorization](1), but is not rate-limited.: 1
+ - js/server-side-unvalidated-url-redirection Untrusted URL redirection depends on a [user-provided value](1).: 1
+ - js/unsafe-jquery-plugin Potential XSS vulnerability in the ['$.fn.collapse' plugin](1).: 1
+ - js/clear-text-cookie Sensitive cookie sent without enforcing SSL encryption.: 1
+ - js/missing-token-validation This cookie middleware is serving a [request handler](1) without CSRF protection.: 1
+ - js/request-forgery The [URL](1) of this request depends on a [user-provided value](2).: 1
+ - js/redos This part of the regular expression may cause exponential backtracking on strings containing many ...: 1
+ - js/session-fixation Route handler does not invalidate session following login.: 1
+ - js/indirect-command-line-injection This command depends on an unsanitized [environment variable](1).: 1
+ - js/log-injection Log entry depends on a [user-provided value](1).: 1
+ - js/comparison-between-incompatible-types Variable 'cookieEnabled' cannot be of type null, but it is compared to ...: 1
+ - js/redundant-assignment This expression assigns property left to itself.: 1
+ - js/useless-assignment-to-local The value assigned to j here is unused.: 1
+ - js/automatic-semicolon-insertion Avoid automated semicolon insertion (90% of all statements in [the enclosing ...: 1
+ - js/trivial-conditional This use of variable 'g' always evaluates to true.: 1
+
+note: 0

@@ -557,6 +557,52 @@ jobs:
             all-reports/
           retention-days: 90
 
+# ================================================================================
+  # JOB 6: AI-Powered Risk Analysis avec Llama
+  # ================================================================================
+  ai-risk-analysis:
+    name: 🤖 AI Risk Analysis
+    runs-on: ubuntu-latest
+    needs: [sast-codeql, sca-dependencies, dast-zap-scan]
+    if: always()
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: 📥 Download all security reports
+        uses: actions/download-artifact@v4
+        with:
+          path: security-reports
+
+      - name: 🤖 Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama serve &
+          sleep 5
+          ollama pull llama3.2:3b
+
+      - name: 🔍 Run AI Analysis
+        working-directory: ./app
+        run: |
+          node ai-parser.js \
+            ../security-reports/sast-codeql-report/javascript.sarif \
+            ../security-reports/sca-dependency-reports/audit-report.json \
+            ../security-reports/dast-zap-report/report_json.json
+
+      - name: 📤 Upload AI Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-security-report
+          path: app/ai-analysis/
+          retention-days: 90
+
 
           
 
